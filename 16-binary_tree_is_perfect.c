@@ -1,63 +1,61 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_is_perfect - Checks if a binary tree is perfect.
- * @tree: A pointer to the root node of the tree to check.
- *
- * Return: If tree is NULL or not perfect, 0.
- *         Otherwise, 1.
+ * binary_tree_is_leaf - check if a tree is perfect
+ * @node: tree to be checked
+ * Return: 1 if true 0 otherwise
  */
-
-size_t binary_tree_size(const binary_tree_t *tree)
+int binary_tree_is_leaf(const binary_tree_t *node)
 {
-	if (tree == NULL)
-		return (0);
-	size_t l_size = 0, r_size = 0;
-
-	l_size = tree->left ? binary_tree_size(tree->left) : 0;
-	r_size = tree->right ? binary_tree_size(tree->right) : 0;
-	return (l_size + r_size + 1);
+	if (node)
+	{
+		if (node->right == NULL && node->left == NULL)
+			return (1);
+	}
+	return (0);
 }
+
+/**
+ * binary_tree_height - check if a tree is perfect
+ * @tree: tree to be checked
+ * Return: 1 if true 0 otherwise
+ */
 
 size_t binary_tree_height(const binary_tree_t *tree)
 {
-	if (tree == NULL)
+	size_t r, l;
+
+	if (tree == NULL || binary_tree_is_leaf(tree))
 		return (0);
-	size_t l_Height = 0, r_Height = 0;
-
-	l_Height = tree->left ? 1 + binary_tree_height(tree->left) : 0;
-	r_Height = tree->right ? 1 + binary_tree_height(tree->right) : 0;
-
-	if (l_Height >= r_Height)
-		return (l_Height);
-	else
-		return (r_Height);
+	l = binary_tree_height(tree->left);
+	r = binary_tree_height(tree->right);
+	if (l > r)
+		return (l + 1);
+	return (r + 1);
 }
-
-int power(int base, int exp)
-{
-	int power = 1, i = 1;
-
-	for (i = 1; i <= exp; i++)
-	{
-		power = power * base;
-	}
-	return (power);
-}
+/**
+ * binary_tree_is_perfect - check if a tree is perfect
+ * @tree: tree to be checked
+ * Return: 1 if true 0 otherwise
+ */
 
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	int size = 0, height = 0, nodes = 0;
+	binary_tree_t *l, *r;
 
 	if (tree)
 	{
-		height = binary_tree_height(tree) + 1;
-		size = binary_tree_size(tree);
-		nodes = power(2, height);
-		if (size == (nodes - 1))
+		l = tree->left;
+		r = tree->right;
+		if (binary_tree_is_leaf(tree))
 			return (1);
-		else
+		if (l == NULL || r == NULL)
 			return (0);
+		if (binary_tree_height(l) == binary_tree_height(r))
+		{
+			if (binary_tree_is_perfect(l) && binary_tree_is_perfect(r))
+				return (1);
+		}
 	}
-	return (0);
+		return (0);
 }
